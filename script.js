@@ -1,4 +1,3 @@
-
 const model = document.getElementById("productModel");
 const productName = document.getElementById("productName");
 const productPrice = document.getElementById("productPrice");
@@ -16,7 +15,6 @@ const defaultCamera = {
 };
 
 let selectedModel = "models/putih.glb";
-let requestVersion = 0;
 
 const products = {
   "models/putih.glb": {
@@ -38,24 +36,23 @@ const products = {
   }
 };
 
-// Memilih produk
+
+/* =====================================
+   PEMILIHAN PRODUK
+===================================== */
+
 productButtons.forEach((button) => {
   button.addEventListener("click", () => {
     const file = button.dataset.model;
     const product = products[file];
 
     if (!product) {
-      statusMessage.textContent = "Data produk tidak ditemukan.";
-      return;
-    }
-
-    if (selectedModel === file && model.src) {
-      resetCamera();
+      statusMessage.textContent =
+        "Data produk tidak ditemukan.";
       return;
     }
 
     selectedModel = file;
-    requestVersion++;
 
     productButtons.forEach((item) => {
       const active = item === button;
@@ -70,16 +67,26 @@ productButtons.forEach((button) => {
     model.alt = product.alt;
     specType.textContent = product.type;
 
-    statusMessage.textContent = `Memuat ${product.name}...`;
+    statusMessage.textContent =
+      `Memuat ${product.name}...`;
 
     resetCamera();
 
-    // Mengganti model dengan file di folder models
-    model.src = file;
+    // Mengatur sumber model hanya jika produknya berubah.
+    if (model.getAttribute("src") !== file) {
+      model.setAttribute("src", file);
+    } else if (model.loaded) {
+      statusMessage.textContent =
+        `${product.name} berhasil dimuat.`;
+    }
   });
 });
 
-// Model berhasil dimuat
+
+/* =====================================
+   STATUS MODEL 3D
+===================================== */
+
 model.addEventListener("load", () => {
   const product = products[selectedModel];
 
@@ -89,13 +96,25 @@ model.addEventListener("load", () => {
   }
 });
 
-// Model gagal dimuat
 model.addEventListener("error", () => {
   statusMessage.textContent =
     `Model gagal dimuat. Periksa file ${selectedModel} di folder models.`;
 });
 
-// Reset kamera tanpa mengganti produk
+model.addEventListener("loadstart", () => {
+  const product = products[selectedModel];
+
+  if (product) {
+    statusMessage.textContent =
+      `Memuat ${product.name}...`;
+  }
+});
+
+
+/* =====================================
+   RESET TAMPILAN KAMERA
+===================================== */
+
 function resetCamera() {
   model.cameraOrbit = defaultCamera.orbit;
   model.fieldOfView = defaultCamera.fieldOfView;
@@ -112,11 +131,108 @@ resetButton.addEventListener("click", () => {
     : "Tampilan telah direset.";
 });
 
-// Status awal
-model.addEventListener("loadstart", () => {
-  const product = products[selectedModel];
 
-  if (product) {
-    statusMessage.textContent = `Memuat ${product.name}...`;
+/* =====================================
+   MUSIK LATAR GLASSIFY
+===================================== */
+
+const backgroundMusic =
+  document.getElementById("backgroundMusic");
+
+const musicToggle =
+  document.getElementById("musicToggle");
+
+const musicIcon =
+  document.getElementById("musicIcon");
+
+const musicLabel =
+  document.getElementById("musicLabel");
+
+// Volume awal musik: 25%.
+backgroundMusic.volume = 0.25;
+
+
+// Memperbarui tampilan tombol musik.
+function updateMusicButton(isPlaying) {
+  musicIcon.textContent = isPlaying ? "♫" : "♪";
+
+  musicLabel.textContent = isPlaying
+    ? "Matikan Musik"
+    : "Putar Musik";
+
+  musicToggle.setAttribute(
+    "aria-pressed",
+    String(isPlaying)
+  );
+
+  musicToggle.setAttribute(
+    "aria-label",
+    isPlaying
+      ? "Matikan musik latar"
+      : "Putar musik latar"
+  );
+}
+
+
+// Mencoba memutar musik secara otomatis.
+async function tryAutoplayMusic() {
+  try {
+    await backgroundMusic.play();
+    updateMusicButton(true);
+  } catch (error) {
+    // Browser memblokir autoplay atau audio gagal dimuat.
+    // Pengguna masih dapat menekan tombol musik.
+    updateMusicButton(false);
+  }
+}
+
+
+// Tombol untuk memutar dan menghentikan musik.
+musicToggle.addEventListener("click", async () => {
+  if (backgroundMusic.paused) {
+    try {
+      await backgroundMusic.play();
+      updateMusicButton(true);
+    } catch (error) {
+      updateMusicButton(false);
+
+      console.error(
+        "Musik tidak dapat diputar. Periksa file audio/background.mp3.",
+        error
+      );
+    }
+  } else {
+    backgroundMusic.pause();
+    updateMusicButton(false);
   }
 });
+
+
+// Menjaga status tombol tetap sesuai dengan kondisi audio.
+backgroundMusic.addEventListener("play", () => {
+  updateMusicButton(true);
+});
+
+backgroundMusic.addEventListener("pause", () => {
+  updateMusicButton(false);
+});
+
+backgroundMusic.addEventListener("error", () => {
+  updateMusicButton(false);
+
+  console.error(
+    "File audio gagal dimuat. Periksa folder audio dan nama file."
+  );
+});
+
+
+// Jalankan percobaan autoplay setelah dokumen siap.
+if (document.readyState === "loading") {
+  document.addEventListener(
+    "DOMContentLoaded",
+    tryAutoplayMusic,
+    { once: true }
+  );
+} else {
+  tryAutoplayMusic();
+}
