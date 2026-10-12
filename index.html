@@ -1,12 +1,15 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#f7f3e9">
+  <meta name="theme-color" content="#f7f5ef">
 
-  <title>Glassify — Toko Gelas 3D & AR</title>
+  <title>Glassify — Glass Collection</title>
+  <meta
+    name="description"
+    content="Jelajahi koleksi gelas Glassify dalam tampilan 3D dan Augmented Reality."
+  >
 
   <link rel="stylesheet" href="style.css">
 
@@ -14,165 +17,205 @@
     type="module"
     src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.4.0/model-viewer.min.js">
   </script>
+
+  <script src="script.js" defer></script>
 </head>
 
 <body>
-  <header class="navbar">
-    <a href="#" class="brand">Glassify<span>.</span></a>
-    <span class="navbar-caption">Toko Gelas Premium</span>
+  <!-- Musik latar -->
+  <audio id="backgroundMusic" loop preload="auto">
+    <source src="audio/background.mp3" type="audio/mpeg">
+    Browser Anda tidak mendukung audio.
+  </audio>
+
+  <!-- Header -->
+  <header class="site-header">
+    <a href="#" class="brand" aria-label="Glassify beranda">
+      <span class="brand-icon">G</span>
+      <span>glassify<span class="brand-dot">.</span></span>
+    </a>
+
+    <nav class="header-nav">
+      <a href="#koleksi">Koleksi</a>
+      <a href="#tentang">Tentang</a>
+    </nav>
   </header>
 
-  <main class="container">
-    <section class="hero">
-      <p class="eyebrow">KOLEKSI GELAS PILIHAN</p>
-      <h1>Temukan Gelas Favoritmu</h1>
-      <p class="hero-description">
-        Jelajahi koleksi gelas Glassify melalui model 3D.
-        Pilih produk favoritmu dan coba lihat penempatannya
-        di ruangan menggunakan Augmented Reality.
-      </p>
+  <!-- Hero -->
+  <main>
+    <section class="hero" id="tentang">
+      <div class="hero-content">
+        <p class="eyebrow">SIMPLE OBJECTS, BETTER LIVING</p>
+
+        <h1>Temukan gelas<br>favoritmu.</h1>
+
+        <p class="hero-description">
+          Desain sederhana untuk menemani setiap momen.
+          Jelajahi produk dalam tampilan 3D dan coba di ruangan
+          melalui fitur Augmented Reality.
+        </p>
+
+        <a href="#koleksi" class="primary-button">
+          Jelajahi Koleksi <span aria-hidden="true">↓</span>
+        </a>
+      </div>
+
+      <div class="hero-decoration" aria-hidden="true">
+        <div class="decor-circle"></div>
+        <span>DESIGNED FOR EVERYDAY</span>
+      </div>
     </section>
 
-    <section class="product-layout">
-      <div class="viewer-card">
-        <div class="viewer-heading">
-          <span>PREVIEW PRODUK</span>
-          <span class="live-label">
-            <span class="live-dot"></span>
-            3D VIEW
-          </span>
+    <!-- Koleksi produk -->
+    <section class="collection" id="koleksi">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">OUR COLLECTION</p>
+          <h2>Koleksi Gelas</h2>
         </div>
 
-        <model-viewer
-          id="productModel"
-          src="models/putih.glb"
-          alt="Model 3D gelas minum putih"
-          camera-controls
-          touch-action="pan-y"
-          auto-rotate
-          rotation-per-second="20deg"
-          ar
-          ar-modes="webxr scene-viewer"
-          ar-placement="floor"
-          ar-scale="auto"
-          shadow-intensity="1"
-          exposure="1"
-          environment-image="neutral"
-          loading="eager"
-          interaction-prompt="auto">
-
-          <div slot="progress-bar" class="loading-overlay">
-            Memuat model 3D...
-          </div>
-
-          <button slot="ar-button" class="ar-button">
-            <span aria-hidden="true">◎</span>
-            Coba di Ruangan (AR)
-          </button>
-        </model-viewer>
-
-        <p class="viewer-hint">
-          Geser untuk memutar model dan gunakan zoom untuk melihat detail.
+        <p class="section-description">
+          Pilih produk dan jelajahi modelnya dalam 3D.
         </p>
       </div>
 
-      <div class="product-info">
-        <p class="eyebrow">GLASSIFY ORIGINAL</p>
-
-        <h2 id="productName">Gelas Minum Putih</h2>
-        <p class="price" id="productPrice">Rp25.000</p>
-
-        <p class="description" id="productDescription">
-          Gelas minum berwarna putih dengan desain sederhana
-          untuk menemani aktivitas sehari-hari. Cocok digunakan
-          untuk air putih, jus, dan berbagai minuman lainnya.
-          Desainnya praktis untuk penggunaan di rumah maupun kantor.
-        </p>
-
-        <div class="section-divider"></div>
-
-        <h3>Pilih Produk</h3>
-        <p class="small-description">
-          Pilih salah satu produk untuk melihat model 3D dan informasinya.
-        </p>
-
-        <div class="product-options">
+      <div class="product-layout">
+        <!-- Daftar produk -->
+        <aside class="product-list" aria-label="Pilihan produk">
           <button
-            type="button"
             class="product-button active"
+            type="button"
             data-model="models/putih.glb"
-            data-name="Gelas Minum Putih"
-            data-price="Rp25.000"
-            data-alt="Model 3D gelas minum putih biasa"
-            data-description="Gelas minum berwarna putih dengan desain sederhana untuk menemani aktivitas sehari-hari. Cocok digunakan untuk air putih, jus, dan berbagai minuman lainnya. Desainnya praktis untuk penggunaan di rumah maupun kantor."
             aria-pressed="true">
 
-            <span class="product-icon ordinary-icon">▱</span>
+            <span class="product-number">01</span>
             <span class="product-button-text">
-              <strong>Gelas Minum</strong>
-              <small>Untuk minuman sehari-hari</small>
+              <strong>Gelas Minum Putih</strong>
+              <small>Gelas biasa</small>
             </span>
+            <span class="product-arrow" aria-hidden="true">↗</span>
           </button>
 
           <button
-            type="button"
             class="product-button"
+            type="button"
             data-model="models/putih2.glb"
-            data-name="Gelas Kopi Putih"
-            data-price="Rp30.000"
-            data-alt="Model 3D gelas kopi putih"
-            data-description="Gelas kopi putih bergaya cangkir yang cocok untuk menikmati kopi, teh, atau minuman hangat lainnya. Desainnya memberikan kesan sederhana dan nyaman untuk waktu santai maupun menemani aktivitas kerja."
             aria-pressed="false">
 
-            <span class="product-icon coffee-icon">☕</span>
+            <span class="product-number">02</span>
             <span class="product-button-text">
-              <strong>Gelas Kopi</strong>
-              <small>Untuk kopi dan teh</small>
+              <strong>Gelas Kopi Putih</strong>
+              <small>Gelas bergagang</small>
             </span>
+            <span class="product-arrow" aria-hidden="true">↗</span>
           </button>
-        </div>
 
-        <div class="status-box" aria-live="polite">
-          <span class="status-indicator"></span>
-          <p id="statusMessage">Memuat model 3D...</p>
-        </div>
+          <div class="list-note">
+            <span class="note-icon">✦</span>
+            <p>Geser, putar, dan lihat produk dari berbagai sudut.</p>
+          </div>
+        </aside>
 
-        <button type="button" id="resetButton" class="reset-button">
-          ↻ Reset Tampilan
-        </button>
-
-        <div class="section-divider"></div>
-
-        <div class="product-specs">
-          <div class="spec-item">
-            <strong id="specType">Gelas biasa</strong>
-            <span>Jenis produk</span>
+        <!-- Detail produk -->
+        <article class="product-detail">
+          <div class="viewer-heading">
+            <span class="viewer-label">3D PRODUCT VIEWER</span>
+            <span class="viewer-badge">
+              <span class="status-dot"></span>
+              Interactive
+            </span>
           </div>
 
-          <div class="spec-item">
-            <strong>Putih</strong>
-            <span>Warna</span>
+          <model-viewer
+            id="productModel"
+            src="models/putih.glb"
+            alt="Model 3D gelas minum putih"
+            camera-controls
+            touch-action="pan-y"
+            auto-rotate
+            rotation-per-second="15deg"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            ar-placement="floor"
+            ar-scale="auto"
+            shadow-intensity="1"
+            exposure="1"
+            environment-image="neutral"
+            loading="eager"
+            interaction-prompt="auto">
+
+            <div slot="progress-bar" class="loading-overlay">
+              Memuat model 3D...
+            </div>
+
+            <button slot="ar-button" class="ar-button" type="button">
+              <span aria-hidden="true">◎</span>
+              Coba di Ruangan (AR)
+            </button>
+          </model-viewer>
+
+          <p id="statusMessage" class="status-message" role="status">
+            Memuat model 3D...
+          </p>
+
+          <div class="product-information">
+            <div>
+              <p class="eyebrow">GLASSIFY COLLECTION</p>
+              <h3 id="productName">Gelas Minum Putih</h3>
+            </div>
+
+            <p class="product-price" id="productPrice">Rp25.000</p>
           </div>
 
-          <div class="spec-item">
-            <strong>3D + AR</strong>
-            <span>Pratinjau</span>
-          </div>
-        </div>
+          <p class="product-description" id="productDescription">
+            Gelas minum berwarna putih dengan desain sederhana
+            untuk menemani aktivitas sehari-hari.
+          </p>
 
-        <p class="ar-note">
-          Fitur AR memerlukan perangkat dan browser yang kompatibel.
-          Harga dan spesifikasi pada halaman ini merupakan contoh
-          dan dapat disesuaikan dengan produk sebenarnya.
-        </p>
+          <div class="product-specifications">
+            <div class="spec-item">
+              <span>Jenis</span>
+              <strong id="specType">Gelas biasa</strong>
+            </div>
+
+            <div class="spec-item">
+              <span>Tampilan</span>
+              <strong>3D + AR</strong>
+            </div>
+          </div>
+
+          <button id="resetButton" class="secondary-button" type="button">
+            <span aria-hidden="true">↺</span>
+            Reset Tampilan 3D
+          </button>
+        </article>
       </div>
+    </section>
+
+    <!-- Penutup -->
+    <section class="closing-section">
+      <p class="eyebrow">GLASSIFY</p>
+      <h2>Simple design.<br>Everyday moments.</h2>
+      <p>Temukan bentuk yang sesuai dengan keseharianmu.</p>
+      <a href="#koleksi" class="primary-button">Lihat Koleksi ↑</a>
     </section>
   </main>
 
-  <footer class="footer">
-    <p>© 2026 Glassify — Jelajahi produk melalui 3D dan AR.</p>
-  </footer>
+  <!-- Kontrol musik -->
+  <button
+    id="musicToggle"
+    class="music-toggle"
+    type="button"
+    aria-pressed="false"
+    aria-label="Putar musik latar">
 
-  <script src="script.js"></script>
+    <span id="musicIcon" aria-hidden="true">♪</span>
+    <span id="musicLabel">Putar Musik</span>
+  </button>
+
+  <footer class="site-footer">
+    <a href="#" class="footer-brand">glassify.</a>
+    <p>© 2026 Glassify. Product visualization experience.</p>
+  </footer>
 </body>
 </html>
